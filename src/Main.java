@@ -1,231 +1,77 @@
 import java.util.Scanner;
-import java.io.IOException;
-
 
 public class Main {
+    static final String[] KEYS = {"q","w","e","a","s","d","z","x","c"};
+
     public static void main(String[] args) {
-        //String[] array = new String[6];
-        String[] array = {"-", "-", "-", "-", "-", "-", "-", "-", "-"};
-        System.out.println("Hello user=");
-        System.out.println("use");
-        System.out.println("q w e");
-        System.out.println("a s d");
-        System.out.println("z x c");
-        System.out.println("Player 1 start");
-        boolean player1 = true;
+        String[] board = {"-","-","-","-","-","-","-","-","-"};
+        boolean player1Turn = true;
+        int turnCount = 0;
         Scanner scanner = new Scanner(System.in);
 
+        System.out.println("Tic Tac Toe:");
+        System.out.println("Controls: q w e / a s d / z x c");
+        printBoard(board);
 
-        /*
-        for (int i = 0; i<3; i++)
-        {
-            System.out.println(array[i*3] + "\t" + array[(3*i)+1] + "\t" + array[(3*i)+2] + "\n");
-        }
-         */
-        int turnCount = 0;
-        int breakNum1 = 0;
-        while (breakNum1 == 0) {
-            int breakNum = 0;
-            while (breakNum == 0) {
-                String thing = scanner.nextLine();
-                switch (thing) {
-                    case "q":
-                        if (array[0] == "-") {
-                            if (player1) {
-                                array[0] = "X";
-                                player1 = false;
-                            } else {
-                                array[0] = "O";
-                                player1 = true;
-                            }
-                            breakNum = -1;
-                        } else {
-                            System.out.println("try again");
-                        }
-                        break;
-                    case "w":
-                        if (array[1] == "-") {
-                            if (player1) {
-                                array[1] = "X";
-                                player1 = false;
-                            } else {
-                                array[1] = "O";
-                                player1 = true;
-                            }
-                            breakNum = -1;
-                        } else {
-                            System.out.println("try again");
-                        }
-                        break;
-                    case "e":
-                        if (array[2] == "-") {
-                            if (player1) {
-                                array[2] = "X";
-                                player1 = false;
-                            } else {
-                                array[2] = "O";
-                                player1 = true;
-                            }
-                            breakNum = -1;
-                        } else {
-                            System.out.println("try again");
-                        }
-                        break;
-                    case "a":
-                        if (array[3] == "-") {
-                            if (player1) {
-                                array[3] = "X";
-                                player1 = false;
-                            } else {
-                                array[3] = "O";
-                                player1 = true;
-                            }
-                            breakNum = -1;
-                        } else {
-                            System.out.println("try again");
-                        }
-                        break;
-                    case "s":
-                        if (array[4] == "-") {
-                            if (player1) {
-                                array[4] = "X";
-                                player1 = false;
-                            } else {
-                                array[4] = "O";
-                                player1 = true;
-                            }
-                            breakNum = -1;
-                        } else {
-                            System.out.println("try again");
-                        }
+        while (true) {
+            System.out.println("Player " + (player1Turn ? "1 (X)" : "2 (O)") + "'s turn:");
+            String input = scanner.nextLine().trim();
+            int index = getIndex(input);
 
-                        break;
-                    case "d":
-                        if (array[5] == "-") {
-                            if (player1) {
-                                array[5] = "X";
-                                player1 = false;
-                            } else {
-                                array[5] = "O";
-                                player1 = true;
-                            }
-                            breakNum = -1;
-                        } else {
-                            System.out.println("try again");
-                        }
-                        break;
-                    case "z":
-                        if (array[6] == "-") {
-                            if (player1) {
-                                array[6] = "X";
-                                player1 = false;
-                            } else {
-                                array[6] = "O";
-                                player1 = true;
-                            }
-                            breakNum = -1;
-                        } else {
-                            System.out.println("try again");
-                        }
-                        break;
-                    case "x":
-                        if (array[7] == "-") {
-                            if (player1) {
-                                array[7] = "X";
-                                player1 = false;
-                            } else {
-                                array[7] = "O";
-                                player1 = true;
-                            }
-                            breakNum = -1;
-                        } else {
-                            System.out.println("try again");
-                        }
-                        break;
-                    case "c":
-                        if (array[8] == "-") {
-                            if (player1) {
-                                array[8] = "X";
-                                player1 = false;
-                            } else {
-                                array[8] = "O";
-                                player1 = true;
-                            }
-                            breakNum = -1;
-                        } else {
-                            System.out.println("try again");
-                        }
-                        break;
-                    default:
-                        System.out.println("Fail");
-                }
+            if (index == -1) {
+                System.out.println("Invalid input, try again.");
+                continue;
             }
+            if (!board[index].equals("-")) {
+                System.out.println("Cell already taken, try again.");
+                continue;
+            }
+
+            board[index] = player1Turn ? "X" : "O";
+            player1Turn = !player1Turn;
             turnCount++;
-            for (int i = 0; i<3; i++)
-            {
-                System.out.println(array[i*3] + "\t" + array[(3*i)+1] + "\t" + array[(3*i)+2] + "\n");
-            }
-            if (turnCount > 4)
-            {
-                String whoHasWon = checkForWin(array);
-                if (whoHasWon == "X")
-                {
-                    System.out.println("X's Win!");
-                    breakNum1 = -1;
-                } else if (whoHasWon == "O") {
-                    System.out.println("O's Win!");
-                    breakNum1 = -1;
-                } else if (whoHasWon == "")
-                    if (turnCount >= 9) {
-                        System.out.println("Tie.");
-                        breakNum1 = -1;
-                    }
-            }
+            printBoard(board);
 
+            String winner = checkForWin(board);
+            if (!winner.isEmpty()) {
+                System.out.println(winner + "'s Win!");
+                break;
+            }
+            if (turnCount == 9) {
+                System.out.println("Tie.");
+                break;
+            }
         }
+
+        scanner.close();
     }
 
-    public static String checkForWin(String[] gameArray) {
-        String whoHasWon = "";
-        for (int i = 0; i < 3; i++)
-        {
-            if ((gameArray[i*3] == "X") && (gameArray[(i*3)+1] == "X") && (gameArray[(i*3)+2] == "X"))
-            {
-                whoHasWon = "X";
-            }
-            if ((gameArray[i*3] == "O") && (gameArray[(i*3)+1] == "O") && (gameArray[(i*3)+2] == "O"))
-            {
-                whoHasWon = "O";
-            }
+    static int getIndex(String input) {
+        for (int i = 0; i < KEYS.length; i++) {
+            if (KEYS[i].equals(input)) return i;
         }
-        for (int i = 0; i < 3; i++)
-        {
-            if ((gameArray[i] == "X") && (gameArray[i+3] == "X") && (gameArray[i+6] == "X"))
-            {
-                whoHasWon = "X";
-            }
-            if ((gameArray[i] == "O") && (gameArray[i+3] == "O") && (gameArray[i+6] == "O"))
-            {
-                whoHasWon = "O";
-            }
-        }
+        return -1;
+    }
 
-        if ((gameArray[0] == "X") && (gameArray[4] == "X") && (gameArray[8] == "X"))
-        {
-            whoHasWon = "X";
+    static void printBoard(String[] board) {
+        for (int i = 0; i < 3; i++) {
+            System.out.println(board[i*3] + " | " + board[i*3+1] + " | " + board[i*3+2]);
         }
-        if ((gameArray[2] == "O") && (gameArray[4] == "O") && (gameArray[6] == "O"))
-        {
-            whoHasWon = "O";
+        System.out.println();
+    }
+
+    static String checkForWin(String[] b) {
+        int[][] lines = {
+                {0,1,2},{3,4,5},{6,7,8}, // rows
+                {0,3,6},{1,4,7},{2,5,8}, // columns
+                {0,4,8},{2,4,6}          // diagonals
+        };
+        for (int[] line : lines) {
+            String s = b[line[0]];
+            if (!s.equals("-") && s.equals(b[line[1]]) && s.equals(b[line[2]])) {
+                return s;
+            }
         }
-        if ((gameArray[2] == "X") && (gameArray[4] == "X") && (gameArray[6] == "X"))
-        {
-            whoHasWon = "X";
-        }
-        if ((gameArray[0] == "O") && (gameArray[4] == "O") && (gameArray[8] == "O"))
-        {
-            whoHasWon = "O";
-        }
-        return whoHasWon;
+        return "";
     }
 }

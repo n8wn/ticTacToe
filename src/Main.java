@@ -9,7 +9,7 @@ public class Main {
         Player playerX = new HumanPlayer();
         //Player playerO = new HumanPlayer();
         Player playerO = new AIPlayer("O");
-        // Player playerX = new AIPlayer("O");
+        //Player playerX = new AIPlayer("X");
 
         Player currentPlayer = (new Random().nextInt(2) == 0) ? playerX : playerO;
 

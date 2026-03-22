@@ -7,9 +7,9 @@ public class Main {
         int turnCount = 0;
 
         Player playerX = new HumanPlayer();
-        Player playerO = new HumanPlayer();
-        // Player playerO = new AIPlayer();
-        // Player playerX = new AIPlayer();
+        //Player playerO = new HumanPlayer();
+        Player playerO = new AIPlayer("O");
+        // Player playerX = new AIPlayer("O");
 
         Player currentPlayer = (new Random().nextInt(2) == 0) ? playerX : playerO;
 

@@ -10,7 +10,7 @@ public class Board {
     }
 
     public String[] getBoard() {
-        return board;
+        return board.clone();
     }
 
     public void setBoard(int i, String value) {

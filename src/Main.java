@@ -1,38 +1,50 @@
-import java.util.Scanner;
+import java.util.Random;
 
 public class Main {
-    static final String[] KEYS = {"q","w","e","a","s","d","z","x","c"};
 
     public static void main(String[] args) {
-        String[] board = {"-","-","-","-","-","-","-","-","-"};
-        boolean player1Turn = true;
+        Board board = new Board(new String[]{"-", "-", "-", "-", "-", "-", "-", "-", "-"});
         int turnCount = 0;
-        Scanner scanner = new Scanner(System.in);
+
+        Player playerX = new HumanPlayer();
+        Player playerO = new HumanPlayer();
+        // Player playerO = new AIPlayer();
+        // Player playerX = new AIPlayer();
+
+        Player currentPlayer = (new Random().nextInt(2) == 0) ? playerX : playerO;
 
         System.out.println("Tic Tac Toe:");
-        System.out.println("Controls: q w e / a s d / z x c");
-        printBoard(board);
+        printBoard(board.getBoard());
 
         while (true) {
-            System.out.println("Player " + (player1Turn ? "1 (X)" : "2 (O)") + "'s turn:");
-            String input = scanner.nextLine().trim();
-            int index = getIndex(input);
+            String symbol = (currentPlayer == playerX) ? "X" : "O";
+            String playerLabel = (currentPlayer == playerX) ? "1 (X)" : "2 (O)";
+            System.out.println("Player " + playerLabel + "'s turn:");
+
+            if (playerX instanceof AIPlayer && playerO instanceof AIPlayer) {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            int index = currentPlayer.getMove(board);
 
             if (index == -1) {
                 System.out.println("Invalid input, try again.");
                 continue;
             }
-            if (!board[index].equals("-")) {
+            if (!board.getBoardAtIndex(index).equals("-")) {
                 System.out.println("Cell already taken, try again.");
                 continue;
             }
 
-            board[index] = player1Turn ? "X" : "O";
-            player1Turn = !player1Turn;
+            board.setBoard(index, symbol);
             turnCount++;
-            printBoard(board);
+            printBoard(board.getBoard());
 
-            String winner = checkForWin(board);
+            String winner = checkForWin(board.getBoard());
             if (!winner.isEmpty()) {
                 System.out.println(winner + "'s Win!");
                 break;
@@ -41,16 +53,9 @@ public class Main {
                 System.out.println("Tie.");
                 break;
             }
-        }
 
-        scanner.close();
-    }
-
-    static int getIndex(String input) {
-        for (int i = 0; i < KEYS.length; i++) {
-            if (KEYS[i].equals(input)) return i;
+            currentPlayer = (currentPlayer == playerX) ? playerO : playerX;
         }
-        return -1;
     }
 
     static void printBoard(String[] board) {
@@ -62,9 +67,9 @@ public class Main {
 
     static String checkForWin(String[] b) {
         int[][] lines = {
-                {0,1,2},{3,4,5},{6,7,8}, // rows
-                {0,3,6},{1,4,7},{2,5,8}, // columns
-                {0,4,8},{2,4,6}          // diagonals
+                {0,1,2},{3,4,5},{6,7,8},
+                {0,3,6},{1,4,7},{2,5,8},
+                {0,4,8},{2,4,6}
         };
         for (int[] line : lines) {
             String s = b[line[0]];

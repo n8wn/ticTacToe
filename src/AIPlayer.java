@@ -43,8 +43,8 @@ public class AIPlayer implements Player {
 
     private int getScore(Board board, int depth) {
         String winner = Main.checkForWin(board.getBoard());
-        if (winner.equals(aiSymbol)) return 10 - depth;
-        if (winner.equals(humanSymbol)) return depth - 10;
+        if (winner.equals(aiSymbol)) return 1000 - depth;
+        if (winner.equals(humanSymbol)) return depth - 1000;
         return 0;
     }
 
@@ -86,7 +86,7 @@ public class AIPlayer implements Player {
                 if (isGameOver(board)) {
                     score = getScore(board, depth);
                 } else {
-                    score = minimax(board, true, depth + 1);
+                    score = minimax(board, true, depth + 1) + scorePerLevel(board);
                 }
                 board.setBoard(i, "-");
                 bestScore = Math.min(score, bestScore);
@@ -102,6 +102,8 @@ public class AIPlayer implements Player {
                 {0,4,8},{2,4,6}
         };
         int totalScore = 0;
+        int aiThreats = 0; // any line where there is 2 ai pieces and an empty piece
+        int humanThreats = 0; // any line where there is 2 human pieces and a empty piece
         for (int[] line : lines) {
             int aiCount = 0;
             int humanCount = 0;
@@ -113,11 +115,15 @@ public class AIPlayer implements Player {
 
             if (aiCount > 0 && humanCount > 0) continue; // line is dead, score 0
 
-            if (aiCount == 2) totalScore += 5;      // two AI pieces + one empty
-            else if (aiCount == 1) totalScore += 1;  // one AI piece + two empty
-            if (humanCount == 2) totalScore -= 5;    // two human pieces + one empty
-            else if (humanCount == 1) totalScore -= 1; // one human piece + two empty
+            if (aiCount == 2) { totalScore += 5; aiThreats++; }
+            else if (aiCount == 1) totalScore += 1;
+            if (humanCount == 2) { totalScore -= 5; humanThreats++; }
+            else if (humanCount == 1) totalScore -= 1;
         }
+
+        if (aiThreats >= 2)    totalScore += 3;
+        if (humanThreats >= 2) totalScore -= 3;
+
         return totalScore;
     }
 }
